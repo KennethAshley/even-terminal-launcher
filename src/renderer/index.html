@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Even Terminal Launcher</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<div id="app" class="shell" aria-busy="true">
+  <aside class="sidebar">
+    <div class="titlebar"></div>
+    <div class="brand"><img src="./app-icon.png" alt="" class="brand-icon"><span><strong>Even Terminal</strong><small>Launcher</small></span></div>
+    <div class="side-title"><span data-i18n="sidebar.profiles">プロファイル</span><button id="new-profile" class="icon" title="追加" data-i18n-title="sidebar.add">＋</button></div>
+    <nav id="profile-list" class="profile-list"></nav>
+    <footer>
+      <button id="show-diagnostics" class="side-action">⌁ <span data-i18n="sidebar.diagnostics">診断</span></button>
+      <button id="show-runtime" class="side-action">↻ <span data-i18n="sidebar.runtime">ランタイム</span><i id="update-dot" hidden></i></button>
+      <div class="side-transfer"><button id="export-settings" data-i18n="action.export">設定を書き出す</button><button id="import-settings" data-i18n="action.import">設定を読み込む</button></div>
+      <label class="locale"><span data-i18n="sidebar.language">表示言語</span><select id="locale-select"><option value="system" data-i18n="language.system">システム</option><option value="ja" data-i18n="language.ja">日本語</option><option value="en" data-i18n="language.en">English</option><option value="zh-CN" data-i18n="language.zh-CN">简体中文</option><option value="zh-TW" data-i18n="language.zh-TW">繁體中文</option><option value="ko" data-i18n="language.ko">한국어</option><option value="es" data-i18n="language.es">Español</option></select></label>
+      <label class="login"><span data-i18n="sidebar.launchAtLogin">ログイン時に起動</span><input id="launch-at-login" type="checkbox" role="switch"></label>
+    </footer>
+  </aside>
+  <main>
+    <section id="empty-state" class="empty">
+      <div class="empty-mark">⌘</div><h1 data-i18n="empty.title">セッションをすぐ手元に</h1>
+      <p data-i18n="empty.description">作業ディレクトリとプロバイダーを登録して、メニューバーからEven Terminalを起動できます。</p>
+      <button class="button primary" data-action="new" data-i18n="empty.create">最初のプロファイルを作成</button>
+    </section>
+    <section id="profile-detail" class="detail" hidden>
+      <header class="detail-head">
+        <div><div class="eyebrow"><i id="detail-status-dot" class="dot"></i><span id="detail-phase"></span></div>
+          <h1 id="detail-name"></h1><p id="detail-directory" class="path"></p></div>
+        <div class="actions"><button class="button quiet" data-action="edit" data-i18n="action.edit">編集</button>
+          <button id="primary-process-action" class="button primary" data-action="start" data-i18n="action.start">起動</button>
+          <button class="button quiet square" data-action="connection" title="接続情報" data-i18n-title="action.connection">⌁</button></div>
+      </header>
+      <div id="error-banner" class="error" hidden></div>
+      <div class="stats">
+        <article><span data-i18n="detail.provider">プロバイダー</span><strong id="detail-provider"></strong><small id="detail-client"></small></article>
+        <article><span data-i18n="detail.httpPort">HTTP ポート</span><strong id="detail-http-port"></strong><small id="detail-public-url"></small></article>
+        <article><span data-i18n="detail.codexPort">Codex App Server</span><strong id="detail-codex-port"></strong><small id="detail-pid"></small></article>
+        <article><span data-i18n="detail.transport">トランスポート</span><strong id="detail-transport"></strong><small id="detail-restart"></small></article>
+      </div>
+      <section class="panel">
+        <div class="panel-head"><div><h2 data-i18n="detail.session">セッション</h2><p id="session-description"></p></div>
+          <div class="actions"><button class="button quiet" data-action="restart" data-i18n="action.restart">再起動</button>
+            <button class="button quiet danger-text" data-action="stop" data-i18n="action.stop">停止</button>
+            <button class="button quiet" data-action="logs" data-i18n="action.logs">ログを開く</button></div></div>
+        <pre id="recent-logs" class="logs">起動すると、ここに最近のログが表示されます。</pre>
+      </section>
+      <section class="panel auto-panel"><div><h2 data-i18n="detail.automation">自動動作</h2><p data-i18n="detail.automationDescription">Launcher起動時と異常終了時の動作。</p></div>
+        <div><span id="autostart-pill" class="pill"></span><span id="restart-pill" class="pill"></span></div></section>
+    </section>
+  </main>
+</div>
+
+<dialog id="profile-dialog" class="sheet">
+  <form id="profile-form">
+    <header><div><span class="eyebrow" data-i18n="profile.settings">プロファイル設定</span><h2 id="profile-dialog-title"></h2></div><button type="button" class="close" data-close="profile-dialog">×</button></header>
+    <div class="form-grid">
+      <input id="profile-id" type="hidden">
+      <label class="field full"><span data-i18n="profile.name">名前</span><input id="profile-name" required maxlength="80" placeholder="Even G2 Project"></label>
+      <label class="field full"><span data-i18n="profile.directory">作業ディレクトリ</span><div class="input-row"><input id="profile-directory" required placeholder="/Users/you/Projects/even-g2"><button id="choose-directory" type="button" class="button quiet" data-i18n="action.choose">選択…</button></div></label>
+      <label class="field"><span data-i18n="profile.provider">既定プロバイダー</span><select id="profile-provider"><option value="claude">Claude Code</option><option value="codex">Codex</option></select></label>
+      <label class="field"><span data-i18n="profile.clientName">クライアント名</span><input id="profile-client" placeholder="Even Terminal"></label>
+      <label class="field"><span data-i18n="detail.httpPort">HTTP ポート</span><input id="profile-http-port" type="number" min="1024" max="65535" placeholder="自動" data-i18n-placeholder="profile.autoPort"></label>
+      <label class="field"><span data-i18n="detail.codexPort">Codex App Server ポート</span><input id="profile-codex-port" type="number" min="1024" max="65535" placeholder="自動" data-i18n-placeholder="profile.autoPort"></label>
+      <label class="field"><span data-i18n="detail.transport">トランスポート</span><select id="profile-transport"><option value="lan">LAN</option><option value="tailscale">Tailscale</option><option value="interface">Interface</option><option value="expose:pinggy">Pinggy</option><option value="expose:bore">Bore</option><option value="expose:ngrok">ngrok</option></select></label>
+      <p id="transport-disclosure" class="transport-disclosure full"></p>
+      <label id="interface-field" class="field" hidden><span data-i18n="profile.interface">インターフェース名</span><input id="profile-interface" placeholder="en0"></label>
+      <label class="field"><span data-i18n="profile.restartPolicy">再起動ポリシー</span><select id="profile-restart"><option value="never" data-i18n="profile.restartNever">自動再起動しない</option><option value="on-crash" data-i18n="profile.restartCrash">クラッシュ時に再起動</option></select></label>
+      <label class="check full"><input id="profile-autostart" type="checkbox"><span><strong data-i18n="profile.autostart">Launcherと一緒に起動</strong><small data-i18n="profile.autostartHelp">アプリ起動時にこのセッションを開始します。</small></span></label>
+    </div>
+    <footer class="sheet-foot"><button id="delete-profile" type="button" class="button danger-text" hidden data-i18n="action.delete">削除</button><span></span><button type="button" class="button quiet" data-close="profile-dialog" data-i18n="action.cancel">キャンセル</button><button class="button primary" data-i18n="action.save">保存</button></footer>
+  </form>
+</dialog>
+
+<dialog id="connection-dialog" class="sheet compact">
+  <header><div><span class="eyebrow" data-i18n="connection.heading">Even G2で接続</span><h2 id="connection-title"></h2></div><button class="close" data-close="connection-dialog">×</button></header>
+  <div class="connection"><div class="qr"><canvas id="connection-qr"></canvas></div><p id="connection-hint"></p>
+    <label class="copy"><span>URL</span><div><code id="connection-url"></code><button data-copy="connection-url" data-i18n="action.copy">コピー</button></div></label>
+    <label class="copy"><span>Token</span><div><code id="connection-token"></code><button data-copy="connection-token" data-i18n="action.copy">コピー</button></div></label>
+    <p id="connection-cwd"></p></div>
+</dialog>
+
+<dialog id="diagnostics-dialog" class="sheet">
+  <header><div><span class="eyebrow" data-i18n="diagnostics.heading">環境チェック</span><h2 data-i18n="sidebar.diagnostics">診断</h2></div><button class="close" data-close="diagnostics-dialog">×</button></header>
+  <div class="dialog-body"><p data-i18n="diagnostics.description">Even Terminalが利用するコマンドを確認します。見つからない場合は実行ファイルを指定できます。</p><div id="diagnostics-list" class="diagnostics"></div></div>
+  <footer class="sheet-foot"><span></span><button id="rerun-diagnostics" class="button primary" data-i18n="action.rerun">再診断</button></footer>
+</dialog>
+
+<dialog id="runtime-dialog" class="sheet compact">
+  <header><div><span class="eyebrow">Even Terminal</span><h2 data-i18n="runtime.heading">ランタイム管理</h2></div><button class="close" data-close="runtime-dialog">×</button></header>
+  <div class="dialog-body"><div class="runtime-card"><span data-i18n="runtime.current">現在のバージョン</span><strong id="runtime-active"></strong><small id="runtime-bundled"></small></div>
+    <div id="runtime-message" class="runtime-message"></div>
+    <label class="field"><span data-i18n="runtime.versionLabel">インストールするバージョン（空欄で最新版）</span><input id="runtime-version-input" placeholder="e.g. 0.8.2"></label>
+    <div id="installed-versions" class="versions"></div></div>
+  <footer class="sheet-foot"><button id="runtime-rollback" class="button quiet" data-i18n="action.rollback">ロールバック</button><span></span><button id="runtime-check" class="button quiet" data-i18n="action.checkUpdate">更新を確認</button><button id="runtime-install" class="button primary" data-i18n="action.update">更新</button></footer>
+</dialog>
+<div id="toasts" class="toasts" aria-live="polite"></div>
+<script src="./renderer.js"></script>
+</body>
+</html>

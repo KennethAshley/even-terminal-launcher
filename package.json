@@ -1,0 +1,54 @@
+{
+  "name": "even-terminal-launcher",
+  "productName": "Even Terminal Launcher",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Menu bar launcher for Even Terminal profiles",
+  "author": "3mintimer",
+  "license": "MIT",
+  "main": "dist/main.cjs",
+  "scripts": {
+    "postinstall": "node scripts/ensure-electron-install.mjs",
+    "clean": "node scripts/clean.mjs",
+    "build": "node scripts/build.mjs",
+    "dev": "npm run build && electron .",
+    "smoke": "npm run build && electron . --smoke-test",
+    "smoke:mac": "npm run smoke",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "license:report": "node scripts/generate-license-report.mjs --write",
+    "license:check": "node scripts/generate-license-report.mjs --check",
+    "package": "npm run build && electron-forge package && node scripts/sign-macos.mjs",
+    "make": "npm run package && electron-forge make --skip-package"
+  },
+  "dependencies": {
+    "@evenrealities/even-terminal": "0.8.1",
+    "@npmcli/arborist": "^9.1.8",
+    "qrcode": "^1.5.4",
+    "semver": "^7.7.2"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^7.8.3",
+    "@electron-forge/maker-dmg": "^7.8.3",
+    "@electron-forge/maker-zip": "^7.8.3",
+    "@eslint/js": "^9.30.1",
+    "@types/node": "^24.0.10",
+    "@types/qrcode": "^1.5.5",
+    "@types/semver": "^7.7.0",
+    "electron": "^37.2.3",
+    "esbuild": "^0.25.6",
+    "eslint": "^9.30.1",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.35.1",
+    "vitest": "^3.2.4"
+  },
+  "allowScripts": {
+    "electron@37.10.3": true,
+    "esbuild@0.25.12": true,
+    "esbuild@0.28.1": true,
+    "fs-xattr@0.3.1": true,
+    "macos-alias@0.2.12": true
+  }
+}

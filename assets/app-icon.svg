@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="138" y1="88" x2="878" y2="954" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7B8188"/>
+      <stop offset="0.52" stop-color="#636970"/>
+      <stop offset="1" stop-color="#4B5158"/>
+    </linearGradient>
+    <radialGradient id="sheen" cx="0" cy="0" r="1" gradientTransform="translate(264 214) rotate(41.2) scale(559 525)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF" stop-opacity="0.23"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="24" stdDeviation="24" flood-color="#111111" flood-opacity="0.28"/>
+    </filter>
+  </defs>
+  <rect x="52" y="52" width="920" height="920" rx="206" fill="url(#bg)"/>
+  <rect x="52" y="52" width="920" height="920" rx="206" fill="url(#sheen)"/>
+  <path d="M195 200C328 101 642 82 817 197" fill="none" stroke="#FFFFFF" stroke-opacity="0.09" stroke-width="20" stroke-linecap="round"/>
+  <g filter="url(#shadow)" transform="translate(158 225) scale(16.8571)">
+    <path d="M14.25 0.125H41.25V6.875H14.25V0.125Z" fill="#FFFFFF"/>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M7.5 0.125026H0.75V33.875H7.5V27.125H14.25V33.875H41.25V27.125H14.25V20.375H41.25V13.625H14.25V6.875L7.5 6.87503V0.125026ZM7.5 20.375H14.25V13.625H7.5V20.375Z" fill="#FFFFFF"/>
+  </g>
+</svg>

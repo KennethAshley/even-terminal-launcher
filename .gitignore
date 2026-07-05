@@ -1,0 +1,41 @@
+# Dependencies and generated output
+node_modules/
+dist/
+out/
+coverage/
+
+# OS and editor state
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.code-workspace
+
+# Logs and local runtime data
+*.log
+logs/
+profiles.json
+settings.json
+secrets.json
+instances.json
+
+# Local environment and package-manager credentials
+.env
+.env.*
+!.env.example
+.npmrc
+!.npmrc.example
+
+# Signing credentials and provisioning files
+*.key
+*.pem
+*.p12
+*.pfx
+*.mobileprovision
+
+# Private working notes (canonical project documentation belongs in docs/)
+private-notes/
+docs/internal/
+*_作業メモ*.md
+*_機能設計_*.md
+*_実装状況_*.md

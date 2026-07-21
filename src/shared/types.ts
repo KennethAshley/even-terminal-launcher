@@ -119,6 +119,7 @@ export interface LauncherApi {
   installRuntimeUpdate(version?: string): Promise<RuntimeInfo>;
   rollbackRuntime(): Promise<RuntimeInfo>;
   openLogFolder(id: string): Promise<void>;
+  openMirror(id: string): Promise<void>;
   onSnapshot(listener: (snapshot: AppSnapshot) => void): () => void;
 }
 
@@ -141,5 +142,6 @@ export const IPC = {
   runtimeInstall: "launcher:runtime:install",
   runtimeRollback: "launcher:runtime:rollback",
   openLogFolder: "launcher:logs:open",
+  openMirror: "launcher:mirror:open",
   snapshotChanged: "launcher:snapshot-changed"
 } as const;

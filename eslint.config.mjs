@@ -12,7 +12,16 @@ export default tseslint.config(
         module: "readonly",
         require: "readonly",
         __dirname: "readonly",
-        process: "readonly"
+        process: "readonly",
+        console: "readonly",
+        Buffer: "readonly",
+        URL: "readonly",
+        URLSearchParams: "readonly",
+        TextEncoder: "readonly",
+        setTimeout: "readonly",
+        clearTimeout: "readonly",
+        setInterval: "readonly",
+        clearInterval: "readonly"
       }
     }
   },

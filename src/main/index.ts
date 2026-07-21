@@ -28,6 +28,7 @@ import {
   type LocalePreference
 } from "../shared/i18n.js";
 import { buildConnectionUrl } from "./connection.js";
+import { buildMirrorTerminalCommand } from "./mirror-terminal.js";
 import {
   parseConfiguration,
   serializeConfiguration
@@ -425,6 +426,18 @@ function registerIpc(): void {
     const logPath = requireServices().supervisor.getLogPath(id);
     const result = await shell.openPath(dirname(logPath));
     if (result) throw new Error(result);
+  });
+  ipcMain.handle(IPC.openMirror, async (_event, id: string) => {
+    const profile = await requireServices().profileStore.get(id);
+    if (!profile) throw new Error("Profile not found");
+    const appRoot = app.getAppPath();
+    const command = buildMirrorTerminalCommand(process.platform, {
+      appRoot,
+      scriptPath: join(appRoot, "scripts", "mirror.mjs"),
+      port: profile.httpPort,
+      pathEnv: process.env.PATH ?? ""
+    });
+    await promisify(execFile)(command.file, command.args);
   });
 }
 

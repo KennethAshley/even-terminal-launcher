@@ -10,6 +10,7 @@
   "scripts": {
     "postinstall": "node scripts/ensure-electron-install.mjs",
     "clean": "node scripts/clean.mjs",
+    "mirror": "node scripts/mirror.mjs",
     "build": "node scripts/build.mjs",
     "dev": "npm run build && electron .",
     "smoke": "npm run build && electron . --smoke-test",

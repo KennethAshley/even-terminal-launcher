@@ -26,6 +26,7 @@ const api: LauncherApi = {
       : ipcRenderer.invoke(IPC.runtimeInstall, version),
   rollbackRuntime: () => ipcRenderer.invoke(IPC.runtimeRollback),
   openLogFolder: (id: string) => ipcRenderer.invoke(IPC.openLogFolder, id),
+  openMirror: (id: string) => ipcRenderer.invoke(IPC.openMirror, id),
   onSnapshot: (listener: (snapshot: AppSnapshot) => void) => {
     const handler = (_event: Electron.IpcRendererEvent, value: AppSnapshot) => listener(value);
     ipcRenderer.on(IPC.snapshotChanged, handler);

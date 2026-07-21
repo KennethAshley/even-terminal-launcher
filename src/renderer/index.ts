@@ -154,10 +154,10 @@ function renderDetail(): void {
   $("session-description").textContent = descriptions[phase];
   const error = $("error-banner"); error.hidden = !state?.error; error.textContent = state?.error ?? "";
   $("recent-logs").textContent = state?.recentLogs.length ? state.recentLogs.join("\n") : t("session.noLogs");
-  document.querySelectorAll<HTMLButtonElement>('[data-action="restart"],[data-action="stop"],[data-action="connection"]')
+  document.querySelectorAll<HTMLButtonElement>('[data-action="restart"],[data-action="stop"],[data-action="connection"],[data-action="mirror"]')
     .forEach(button => {
       if (button === primary) return;
-      button.disabled = button.dataset.action === "connection"
+      button.disabled = button.dataset.action === "connection" || button.dataset.action === "mirror"
         ? phase !== "ready" : phase === "stopped" || phase === "stopping";
     });
 }
@@ -286,6 +286,7 @@ async function action(name: string): Promise<void> {
   if (name === "stop") await api.stopProfile(profile.id);
   if (name === "restart") await api.restartProfile(profile.id);
   if (name === "logs") await api.openLogFolder(profile.id);
+  if (name === "mirror") await api.openMirror(profile.id);
   if (name === "connection") await showConnection(profile);
 }
 
